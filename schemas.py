@@ -28,11 +28,11 @@ class GeneratAnalystState(BaseModel):
 
 class InterviewState(BaseModel):
     max_num_turns: int
-    context: Annotated[list, operator.add]
+    context: Annotated[list, operator.add] = []
     analyst: Analyst
-    interview: str
-    sections: list
-    messages: Annotated[list[AnyMessage], add_messages]
+    interview: str = ""
+    sections: list = []
+    messages: Annotated[list[AnyMessage], add_messages] = []
 
 
 class SearchQuestion(BaseModel):
