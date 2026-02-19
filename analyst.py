@@ -36,7 +36,12 @@ class AnalystAgent:
             structured_llm = self.llm.with_structured_output(Perspective)
             system_message = SystemMessage(content=ANALYST_INSTRUCTIONS.format(topic=topic, max_analysts=max_analysts, human_analyst_feedback=human_analyst_feedback))
             response = structured_llm.invoke([system_message, HumanMessage(content="Generate the analysts")])
-            return {"analysts": response.analysts}
+            analysts = response.analysts
+            print("-" * 50)
+            for analyst in analysts:
+                print(f"Persona: \n{analyst.persona}")
+                print("-" * 50)
+            return {"analysts": analysts}
 
         def human_feedback(state: GeneratAnalystState):
             """No-op node that will be interrupted by a human"""

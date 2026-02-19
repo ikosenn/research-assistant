@@ -16,24 +16,34 @@ class Analyst(BaseModel):
 
 
 class Perspective(BaseModel):
-    analysts: list[Analyst] = Field(description="The analysts and their roles and affiliations.")
+    analysts: list[Analyst] = Field(default_factory=list, description="The analysts and their roles and affiliations.")
 
 
-class GeneratAnalystState(BaseModel):
+class GeneratAnalystState(Perspective):
     topic: str
     max_analysts: int
     human_analyst_feedback: str | None = None
-    analysts: list[Analyst] | None = None
 
 
 class InterviewState(BaseModel):
     max_num_turns: int
-    context: Annotated[list, operator.add] = []
+    context: Annotated[list, operator.add] = Field(default_factory=list)
     analyst: Analyst
     interview: str = ""
-    sections: list = []
-    messages: Annotated[list[AnyMessage], add_messages] = []
+    sections: list = Field(default_factory=list)
+    messages: Annotated[list[AnyMessage], add_messages] = Field(default_factory=list)
 
 
 class SearchQuestion(BaseModel):
-    search_query: str = Field(None, description="The search query to use to find relevant documents.")
+    search_query: str = Field(description="The search query to use to find relevant documents.")
+
+
+class ResearchState(Perspective):
+    sections: Annotated[list, operator.add] = Field(default_factory=list)
+    introduction: str = ""
+    content: str = ""
+    conclusion: str = ""
+    final_report: str = ""
+    topic: str = ""
+    messages: Annotated[list[AnyMessage], add_messages] = Field(default_factory=list)
+    max_num_turns: int = 5

@@ -123,7 +123,12 @@ class InterviewAgent:
             search_system_message = SystemMessage(content=SEARCH_INSTRUCTIONS)
             search_query = structured_llm.invoke([search_system_message, *state.messages])
             data = self.search.invoke({"query": search_query.search_query})
-            search_docs = data.get("results", data)
+            if isinstance(data, dict):
+                search_docs = data.get("results", [])
+            else:
+                print(f"DATAAAAAAA: {data}")
+                search_docs = data
+
             formatted_docs = "\n\n---\n\n".join([
                 f'<Document href="{doc.get("url")}"/>\n{doc.get("content")}\n</Document>'
                 for doc in search_docs
@@ -136,9 +141,7 @@ class InterviewAgent:
             structured_llm = self.llm.with_structured_output(SearchQuestion)
             search_system_message = SystemMessage(content=SEARCH_INSTRUCTIONS)
             search_query = structured_llm.invoke([search_system_message, *state.messages])
-            print(f"Search queryssssssssssSSSSSSSSSSSSSSSSSSSSS: \n{search_query.search_query}")
             search_docs = WikipediaLoader(query=search_query.search_query, load_max_docs=MAX_RESULTS).load()
-            print(f"Search docsssssssss: \n{search_docs}")
             formatted_docs = "\n\n---\n\n".join([
                 f'<Document source="{doc.metadata.get("source")}" page="{doc.metadata.get("page", "")}"/>\n{doc.page_content}\n</Document>'
                 for doc in search_docs
