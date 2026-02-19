@@ -116,9 +116,20 @@ class ResearchAgent:
         def finalize_report(state: ResearchState):
             """Finalize the report"""
             content = state.content
-            introduction = state.introduction
-            conclusion = state.conclusion
-            return {"final_report": f"{introduction}\n\n{content}\n\n{conclusion}"}
+            if content.startswith("## Insights"):
+                content = content.strip("## Insights")
+            if "## Sources" in content:
+                try:
+                    content, sources = content.split("\n## Sources\n")
+                except:
+                    sources = None
+            else:
+                sources = None
+
+            final_report = state.introduction + "\n\n" + content + "\n\n" + state.conclusion
+            if sources is not None:
+                final_report += "\n\n## Sources\n" + sources
+            return {"final_report": final_report}
 
         def build_researcher_graph():
             """Build the research graph"""
