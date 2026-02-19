@@ -46,4 +46,3 @@ class ResearchState(Perspective):
     final_report: str = ""
     topic: str = ""
     messages: Annotated[list[AnyMessage], add_messages] = Field(default_factory=list)
-    max_num_turns: int = 5

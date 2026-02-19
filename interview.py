@@ -126,8 +126,7 @@ class InterviewAgent:
             if isinstance(data, dict):
                 search_docs = data.get("results", [])
             else:
-                print(f"DATAAAAAAA: {data}")
-                search_docs = data
+                search_docs = []
 
             formatted_docs = "\n\n---\n\n".join([
                 f'<Document href="{doc.get("url")}"/>\n{doc.get("content")}\n</Document>'

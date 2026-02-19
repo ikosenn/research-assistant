@@ -30,8 +30,8 @@ To format your report:
 5. Do not mention any analyst names in your report.
 6. Preserve any citations in the memos, with will be annotated in brackes, for example [1] or [2].
 7. Create a final, consolidated list of sources and add to a Sources section with the `## Sources` header.
-8. List your sources in order and do not repeat.
-
+8. List your sources in order and do not repeat. Make sure to include the source number in the list.
+For example:
 [1] Source 1
 [2] Source 2
 
@@ -63,9 +63,10 @@ Here are the sections to reflect on for writing: {context}
 """
 
 class ResearchAgent:
-    def __init__(self, llm: ChatOpenAI):
+    def __init__(self, llm: ChatOpenAI, max_num_turns: int = 5):
         self.llm = llm
         self.graph = self._build_graph()
+        self.max_num_turns = max_num_turns
 
     def _build_graph(self):
         def initiate_interview(state: ResearchState):
@@ -75,7 +76,7 @@ class ResearchAgent:
                 topic = state.topic
                 interviews.append(Send("conduct_interview", {
                     "analyst": analyst,
-                    "max_num_turns": state.max_num_turns,
+                    "max_num_turns": self.max_num_turns,
                     "messages": [HumanMessage(content=f"So you said you were wring an article on {topic}?")]
                 }))
             if len(interviews) == 0:

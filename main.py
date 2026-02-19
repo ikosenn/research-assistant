@@ -34,8 +34,8 @@ def run_analyst_agent(llm: ChatOpenAI, topic: str, max_analysts: int) -> tuple[l
     return graph.get_state(thread).values.get('analysts'), graph.get_state(thread).values.get('topic')
 
 def conduct_research(llm: ChatOpenAI, analysts: list[Analyst], topic: str, max_num_turns: int) -> str:
-    research_state = ResearchState(analysts=analysts, topic=topic, max_num_turns=max_num_turns)
-    research_agent = ResearchAgent(llm)
+    research_state = ResearchState(analysts=analysts, topic=topic)
+    research_agent = ResearchAgent(llm, max_num_turns)
     thread = {"configurable": {"thread_id": "1"}}
     graph = research_agent.graph
     for event in graph.stream(research_state, thread, stream_mode="updates"):
